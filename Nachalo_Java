@@ -103,17 +103,25 @@ class Game {
     }
 
     private void initializeResidents() {
+        // Блок try
         try (Scanner scanner = new Scanner(new File("D:/JAVA_PROGA/Classi/residents2.txt"))) {
             while (scanner.hasNextLine() && residentCount < RESIDENTS_COUNT) {
                 String[] data = scanner.nextLine().split(" ");
-                if (data.length == 6) {
-                    residents[residentCount] = new Resident();
-                    residents[residentCount].setResident(data[0], data[1], data[2], data[3], data[4], data[5]);
-                    residentCount++;
+                if (data.length != 6) {
+                    // Блок throw
+                    throw new IllegalArgumentException("Неверное количество данных для жильца.");
                 }
+                residents[residentCount] = new Resident();
+                residents[residentCount].setResident(data[0], data[1], data[2], data[3], data[4], data[5]);
+                residentCount++;
             }
-        } catch (FileNotFoundException e) {
+        } // Блок catch
+        catch (FileNotFoundException e) {
             System.err.println("Не удалось открыть файл жильцов.");
+            System.exit(1);
+        } // Блок catch для исключения throw
+        catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
         }
         if(residentCount==0){
@@ -162,6 +170,7 @@ class Game {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
+        // Блок try
         try (PrintWriter resultFile = new PrintWriter(new FileWriter("results2.txt", true))) {
             int totalActualResidents = 0;
             int totalMonsters = 0;
@@ -243,7 +252,8 @@ class Game {
             resultFile.printf("Настоящих жильцов не пропущено: %d\n", totalActResNOT);
             resultFile.printf("Монстров-двойников не пропущено: %d\n", totalMonsNOT);
             System.out.println("Результаты проверки записаны в файл results2.txt");
-        } catch (IOException e) {
+        } // Блок catch
+        catch (IOException e) {
             System.out.println("Ошибка при работе с файлом: " + e.getMessage());
         }
         // Чтение результатов
@@ -259,9 +269,11 @@ class Game {
         // Симуляция звонка
         for (int i = 0; i < 3; ++i) {
             System.out.println("Звонок...");
+            // Блок try
             try {
                 Thread.sleep(1000); // Задержка 1 секунда
-            } catch (InterruptedException e) {
+            } // Блок catch
+            catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
@@ -283,19 +295,17 @@ class Game {
     }
 
     private void readResults(){
-        //Scanner scanner = new Scanner(System.in);
         int[] A = new int[401];
         int i = 0;
+        // Блок try
         try (Scanner scanner = new Scanner(new File("results2.txt"))) {
-            //char[] s = new char[40];
             while (scanner.hasNextLine()) {
-                //scanner.useDelimiter(": ");
                 String[] s = scanner.nextLine().split(": ");
                 A[i] = Integer.parseInt (s[1]);
                 i++;
-                //String[] data = scanner.nextLine().split(": ");
             }
-        } catch (FileNotFoundException e) {
+        } // Блок catch
+        catch (FileNotFoundException e) {
             System.err.println("Не удалось открыть файл.");
             System.exit(1);
         }
